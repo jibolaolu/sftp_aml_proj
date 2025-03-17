@@ -6,7 +6,7 @@ locals {
   }
   resource_prefix = "${var.service}-${var.environment}"
 
-  sftp_keys = jsondecode(file("ssh_keys.json"))  # Read SSH keys from Jenkins-injected JSON
+  sftp_keys = jsondecode(var.sftp_keys_json)
 }
 
 locals {

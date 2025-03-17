@@ -39,14 +39,6 @@ variable "sftp_users" {
   default = {}
 }
 
-# variable "sftp_users" {
-#   description = "Map of SFTP users to their SSH key file paths and admin flag"
-#   type = list(string)
-#   default = []
-# }
-
-
-
 variable "invocation_endpoint" {
   description = "The ARN of the endpoint where the S3 events should be sent (e.g., Lambda, SNS)"
   type        = string
@@ -117,6 +109,11 @@ variable "container_image" {
 variable "s3_bucket_name" {
   description = "Name of the S3 bucket"
   default     = "ecs-demo-bucket"
+}
+
+variable "sftp_keys_json" {
+  description = "JSON mapping of SFTP users to their SSH keys"
+  type        = string
 }
 
 
