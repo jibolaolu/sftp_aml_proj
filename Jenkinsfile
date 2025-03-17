@@ -33,7 +33,7 @@ pipeline {
                         extensions: [[$class: 'WipeWorkspace']],
                         userRemoteConfigs: [[
                             credentialsId: 'github-credentials',
-                            url: 'https://github.com/your-org/sftp-project.git'
+                            url: 'https://github.com/jibolaolu/sftp_aml_proj.git'
                         ]]
                     ])
                 }
@@ -42,7 +42,7 @@ pipeline {
 
         stage('Inject SSH Keys for SFTP Users') {
             environment {
-                SSH_KEYS_JSON = credentials('sftp_keys_json')  // Store JSON in Jenkins credentials
+                SSH_KEYS_JSON = credentials('sftp_keys_json')  //Store JSON in Jenkins credentials
             }
             steps {
                 script {
