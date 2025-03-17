@@ -44,18 +44,18 @@ pipeline {
         stage('Inject SSH Keys for SFTP Users') {
             steps {
                 script {
-                    def sftpUsers = ["sftp_user1", "sftp_user2", "sftp_user3", "sftp_admin"]  // List all SFTP users
+                    def sftpUsers = ["sftp_user1", "sftp_user2", "sftp_user3", "sftp_admin"]
                     def sshKeys = [:]
 
                     for (user in sftpUsers) {
-                        withCredentials([string(credentialsId: "${user}", variable: "SSH_PUB_KEY")]) {
+                        withCredentials([string(credentialsId: user, variable: "SSH_PUB_KEY")]) {
                             sshKeys[user] = env.SSH_PUB_KEY
                         }
                     }
 
-                    // Convert SSH keys to JSON format and store in environment variable
+                    // Convert SSH keys to a JSON string and store it in an environment variable
                     env.SSH_PUBLIC_KEYS_JSON = groovy.json.JsonOutput.toJson(sshKeys)
-                    echo "✅ Retrieved SSH Public Keys for Users"
+                    echo "✅ SSH Public Keys Retrieved: ${env.SSH_PUBLIC_KEYS_JSON}"
                 }
             }
         }
@@ -121,7 +121,7 @@ pipeline {
                 ]]) {
                     script {
                         echo "Running Terraform Plan..."
-                        sh "terraform plan -var-file=${env.TFVARS_FILE} -var 'ssh_public_keys=${env.SSH_PUBLIC_KEYS_JSON}' -out=tfplan"
+                        sh """terraform plan -var-file=${env.TFVARS_FILE} -var 'ssh_public_keys=${env.SSH_PUBLIC_KEYS_JSON}' -out=tfplan"""
 
                         if (env.SELECTED_ACTION == 'Plan and Apply') {
                             env.APPLY_AFTER_PLAN = input(
@@ -148,7 +148,7 @@ pipeline {
                 ]]) {
                     script {
                         echo "Applying Terraform..."
-                        sh "terraform apply -auto-approve -var-file=${env.TFVARS_FILE} -var 'ssh_public_keys=${env.SSH_PUBLIC_KEYS_JSON}'"
+                        sh """terraform apply -auto-approve -var-file=${env.TFVARS_FILE} -var 'ssh_public_keys=${env.SSH_PUBLIC_KEYS_JSON}'"""
                     }
                 }
             }
