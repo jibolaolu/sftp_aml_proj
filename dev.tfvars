@@ -1,45 +1,45 @@
-sftp_users = {
-  "sftp_user1" = {
-    logical_directory_mappings = [
-      {
-        source_directory = "/sftp_user1"     # This would be the Entry in the code, where the external lands when they log in
-        user_directory   = "/sftp-dev-acsp-aml/sftp_user1" #This is where User uploads files to be processed.
-      }
-    ]
-    ssh_public_key_files = ["sftp_user1.pub"]
-    is_admin             = false
-  },
-  "sftp_user2" = {
-    logical_directory_mappings = [
-      {
-        source_directory = "/sftp_user2"
-        user_directory   = "/sftp-dev-acsp-aml/sftp_user2"
-      }
-    ]
-    ssh_public_key_files = ["sftp_user2.pub"]
-    is_admin             = false
-  },
-  "sftp_user3" = {
-    logical_directory_mappings = [
-      {
-        source_directory = "/sftp_user3"
-        user_directory   = "/sftp-dev-acsp-aml/sftp_user3"
-      }
-    ]
-    ssh_public_key_files = ["sftp_user3.pub"]
-    is_admin             = false
-  },
-  "sftp_admin" = {
-    logical_directory_mappings = [
-      {
-        source_directory = "/"
-        user_directory   = "/sftp-dev-acsp-aml"
-      }
-    ]
-    ssh_public_key_files = ["sftp_admin.pub"]
-    is_admin             = true
-  }
-}
+# sftp_users = {
+#   "sftp_user1" = {
+#     logical_directory_mappings = [
+#       {
+#         source_directory = "/sftp_user1"     # This would be the Entry in the code, where the external lands when they log in
+#         user_directory   = "/sftp-dev-acsp-aml/sftp_user1" #This is where User uploads files to be processed.
+#       }
+#     ]
+#     ssh_public_key_files = ["sftp_user1.pub"]
+#     is_admin             = false
+#   },
+#   "sftp_user2" = {
+#     logical_directory_mappings = [
+#       {
+#         source_directory = "/sftp_user2"
+#         user_directory   = "/sftp-dev-acsp-aml/sftp_user2"
+#       }
+#     ]
+#     ssh_public_key_files = ["sftp_user2.pub"]
+#     is_admin             = false
+#   },
+#   "sftp_user3" = {
+#     logical_directory_mappings = [
+#       {
+#         source_directory = "/sftp_user3"
+#         user_directory   = "/sftp-dev-acsp-aml/sftp_user3"
+#       }
+#     ]
+#     ssh_public_key_files = ["sftp_user3.pub"]
+#     is_admin             = false
+#   },
+#   "sftp_admin" = {
+#     logical_directory_mappings = [
+#       {
+#         source_directory = "/"
+#         user_directory   = "/sftp-dev-acsp-aml"
+#       }
+#     ]
+#     ssh_public_key_files = ["sftp_admin.pub"]
+#     is_admin             = true
+#   }
+# }
 
 service     = "sftp"
 environment = "dev"
@@ -62,5 +62,38 @@ region = "eu-west-2"
 # user_directory_prefix = "sftp-dev-acsp-aml"
 # sftp_users = ["sftp_user1", "sftp_user2", "sftp_user3", "sftp_admin"]
 
+
+sftp_users = {
+  "sftp_user1" = {
+    logical_directory_mappings = [
+      {
+        source_directory = "/sftp_user1"
+        user_directory   = "/sftp-dev-acsp-aml/sftp_user1"
+      }
+    ]
+    ssh_public_key = lookup(var.ssh_public_keys, "sftp_user1", null)
+    is_admin       = false
+  },
+  "sftp_user2" = {
+    logical_directory_mappings = [
+      {
+        source_directory = "/sftp_user2"
+        user_directory   = "/sftp-dev-acsp-aml/sftp_user2"
+      }
+    ]
+    ssh_public_key = lookup(var.ssh_public_keys, "sftp_user2", null)
+    is_admin       = false
+  },
+  "sftp_admin" = {
+    logical_directory_mappings = [
+      {
+        source_directory = "/"
+        user_directory   = "/sftp-dev-acsp-aml"
+      }
+    ]
+    ssh_public_key = lookup(var.ssh_public_keys, "sftp_admin", null)
+    is_admin       = true
+  }
+}
 
 

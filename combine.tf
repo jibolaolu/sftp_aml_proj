@@ -389,17 +389,15 @@ resource "aws_transfer_ssh_key" "transfer_user" {
   for_each  = var.sftp_users
   server_id = aws_transfer_server.transfer_server.id
   user_name = each.key
-
-  # Fetch SSH key dynamically from Jenkins credentials, AWS SSM, or Secrets Manager
-  body = chomp(lookup(local.sftp_keys, each.key, ""))
+  body      = each.value.ssh_public_key
 
   depends_on = [aws_transfer_user.transfer_user]
 }
 
 # Dynamic SSH Key Lookup
-locals {
-  sftp_keys = jsondecode(file("${path.module}/ssh_keys.json")) # Read SSH keys from external JSON file
-}
+# locals {
+#   sftp_keys = jsondecode(file("${path.module}/ssh_keys.json")) # Read SSH keys from external JSON file
+# }
 # resource "aws_transfer_user" "transfer_user" {
 #   for_each            = var.sftp_users
 #   server_id           = aws_transfer_server.transfer_server.id

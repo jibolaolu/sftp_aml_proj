@@ -26,17 +26,36 @@ variable "default_tags" {
   default     = {}
 }
 
+# variable "sftp_users" {
+#   description = "Map of SFTP users to their SSH key file paths and admin flag"
+#   type = map(object({
+#     logical_directory_mappings = list(object({
+#       source_directory = string
+#       user_directory   = string
+#     }))
+#     ssh_public_key_files = list(string)
+#     is_admin             = bool
+#   }))
+#   default = {}
+# }
+
 variable "sftp_users" {
-  description = "Map of SFTP users to their SSH key file paths and admin flag"
+  description = "Map of SFTP users to their SSH keys and access settings"
   type = map(object({
     logical_directory_mappings = list(object({
       source_directory = string
       user_directory   = string
     }))
-    ssh_public_key_files = list(string)
-    is_admin             = bool
+    ssh_public_key = string  # Ensure this attribute is defined
+    is_admin       = bool
   }))
   default = {}
+}
+
+
+variable "ssh_public_keys" {
+  description = "Map of SSH Public Keys for SFTP Users"
+  type        = map(string)
 }
 
 variable "invocation_endpoint" {
