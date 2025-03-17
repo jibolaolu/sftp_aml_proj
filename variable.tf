@@ -130,10 +130,10 @@ variable "s3_bucket_name" {
   default     = "ecs-demo-bucket"
 }
 
-variable "sftp_keys_json" {
-  description = "JSON mapping of SFTP users to their SSH keys"
-  type        = string
-}
+# variable "sftp_keys_json" {
+#   description = "JSON mapping of SFTP users to their SSH keys"
+#   type        = string
+# }
 
 
 
