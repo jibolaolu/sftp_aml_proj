@@ -29,7 +29,7 @@ pipeline {
                 script {
                     echo 'Checking out source code...'
                     checkout([$class: 'GitSCM',
-                        branches: [[name: '*/main']],
+                        branches: [[name: '*/master']],
                         extensions: [[$class: 'WipeWorkspace']],
                         userRemoteConfigs: [[
                             credentialsId: 'github-credentials',
