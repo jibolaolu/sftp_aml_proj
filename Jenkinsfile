@@ -47,7 +47,7 @@ pipeline {
                     def sshKeys = [:]
 
                     for (user in sftpUsers) {
-                        withCredentials([string(credentialsId: "sftp-key-${user}", variable: "SSH_PUB_KEY")]) {
+                        withCredentials([string(credentialsId: "${user}", variable: "SSH_PUB_KEY")]) {
                             sshKeys[user] = env.SSH_PUB_KEY
                         }
                     }
