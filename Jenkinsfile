@@ -5,7 +5,7 @@ pipeline {
         AWS_REGION     = 'eu-west-2'
         S3_BUCKET      = "seunadio-tfstate"
         STATE_FILE_KEY = "sftp-infra/terraform.tfstate"
-        SSH_KEYS_JSON  = credentials('sftp_keys_json')  // Store JSON in Jenkins credentials
+        //SSH_KEYS_JSON  = credentials('sftp_keys_json')  // Store JSON in Jenkins credentials
     }
 
     stages {
