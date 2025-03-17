@@ -41,29 +41,37 @@ pipeline {
         }
 
         stage('Inject SSH Keys for SFTP Users') {
-            environment {
-                SSH_KEYS_JSON = credentials('sftp_keys_json')  //Store JSON in Jenkins credentials
-            }
             steps {
                 script {
-                    // Write SSH key mapping from Jenkins credentials into a JSON file
-                    writeFile file: "ssh_keys.json", text: SSH_KEYS_JSON
-                    echo "SSH keys successfully written to ssh_keys.json."
+                    def sftpUsers = ["sftp_user1", "sftp_user2", "sftp_user3", "sftp_admin"]  // List all SFTP users
+                    def sshKeys = [:]
+
+                    for (user in sftpUsers) {
+                        withCredentials([string(credentialsId: "sftp-key-${user}", variable: "SSH_PUB_KEY")]) {
+                            sshKeys[user] = env.SSH_PUB_KEY
+                        }
+                    }
+
+                    // Convert SSH keys to JSON format and store in environment variable
+                    env.SSH_PUBLIC_KEYS_JSON = groovy.json.JsonOutput.toJson(sshKeys)
+                    echo "✅ Retrieved SSH Public Keys for Users"
                 }
             }
         }
 
         stage('Terraform Init & State Check') {
             steps {
-                withCredentials([
-                    [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credentials',
-                     accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']
-                ]) {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws_credentials',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
                     script {
                         echo "Initializing Terraform..."
                         sh """
-                            export AWS_ACCESS_KEY_ID=\$AWS_ACCESS_KEY_ID
-                            export AWS_SECRET_ACCESS_KEY=\$AWS_SECRET_ACCESS_KEY
+                            export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                            export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
                             terraform init
                         """
 
@@ -104,13 +112,15 @@ pipeline {
                 expression { env.SELECTED_ACTION == 'Plan' || env.SELECTED_ACTION == 'Plan and Apply' }
             }
             steps {
-                withCredentials([
-                    [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credentials',
-                     accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']
-                ]) {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws_credentials',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
                     script {
                         echo "Running Terraform Plan..."
-                        sh "terraform plan -var-file=${env.TFVARS_FILE} -out=tfplan"
+                        sh "terraform plan -var-file=${env.TFVARS_FILE} -var 'ssh_public_keys=${env.SSH_PUBLIC_KEYS_JSON}' -out=tfplan"
 
                         if (env.SELECTED_ACTION == 'Plan and Apply') {
                             env.APPLY_AFTER_PLAN = input(
@@ -129,13 +139,15 @@ pipeline {
                 expression { env.SELECTED_ACTION == 'Plan and Apply' && env.APPLY_AFTER_PLAN == 'Yes' }
             }
             steps {
-                withCredentials([
-                    [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credentials',
-                     accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']
-                ]) {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws_credentials',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
                     script {
                         echo "Applying Terraform..."
-                        sh "terraform apply -auto-approve tfplan"
+                        sh "terraform apply -auto-approve -var-file=${env.TFVARS_FILE} -var 'ssh_public_keys=${env.SSH_PUBLIC_KEYS_JSON}'"
                     }
                 }
             }
@@ -146,16 +158,18 @@ pipeline {
                 expression { env.SELECTED_ACTION == 'Destroy' }
             }
             steps {
-                withCredentials([
-                    [$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws_credentials',
-                     accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY']
-                ]) {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws_credentials',
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
+                ]]) {
                     script {
                         if (env.STATEFILE_EXISTS == "true") {
                             echo "Destroying Terraform..."
                             sh """
                                 terraform refresh -var-file=${env.TFVARS_FILE}
-                                terraform destroy -auto-approve -var-file=${env.TFVARS_FILE}
+                                terraform destroy -auto-approve -var-file=${env.TFVARS_FILE} -var 'ssh_public_keys=${env.SSH_PUBLIC_KEYS_JSON}'
                             """
                         } else {
                             echo "⚠️ No Terraform statefile found. Nothing to destroy."

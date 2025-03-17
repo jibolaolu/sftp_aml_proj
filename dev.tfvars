@@ -84,6 +84,16 @@ sftp_users = {
     ssh_public_key = lookup(var.ssh_public_keys, "sftp_user2", null)
     is_admin       = false
   },
+  "sftp_user3" = {
+    logical_directory_mappings = [
+      {
+        source_directory = "/sftp_user3"
+        user_directory   = "/sftp-dev-acsp-aml/sftp_user2"
+      }
+    ]
+    ssh_public_key = lookup(var.ssh_public_keys, "sftp_user3", null)
+    is_admin       = false
+  },
   "sftp_admin" = {
     logical_directory_mappings = [
       {
