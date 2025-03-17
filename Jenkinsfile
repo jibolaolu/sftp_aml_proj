@@ -18,7 +18,7 @@ pipeline {
                             choice(name: 'Environment', choices: ['dev', 'prod'], description: 'Select the environment')
                         ]
                     )
-                    env.TFVARS_FILE = "env/${env.SELECTED_ENV}.tfvars"
+                    env.TFVARS_FILE = "${env.SELECTED_ENV}.tfvars"
                     echo "User selected environment: ${env.SELECTED_ENV}"
                 }
             }
