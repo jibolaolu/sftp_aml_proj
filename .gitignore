@@ -1,0 +1,13 @@
+./terraform*
+.*.pub
+.*.ppk
+.terraform*
+.session-manager*
+.idea*
+./ssh_aml_bodies*
+*.pub
+*.ppk
+/ssh_aml_bodies
+session-manager-plugin.deb
+sftp_user*
+sftp_admin*
