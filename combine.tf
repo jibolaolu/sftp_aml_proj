@@ -389,7 +389,7 @@ resource "aws_transfer_ssh_key" "transfer_user" {
   for_each  = var.sftp_users
   server_id = aws_transfer_server.transfer_server.id
   user_name = each.key
-  body      = each.value.ssh_public_key
+  body      = lookup(var.ssh_public_keys, each.value.ssh_public_key, null)  # Perform the lookup here
 
   depends_on = [aws_transfer_user.transfer_user]
 }

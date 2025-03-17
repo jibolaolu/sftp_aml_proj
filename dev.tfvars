@@ -71,7 +71,7 @@ sftp_users = {
         user_directory   = "/sftp-dev-acsp-aml/sftp_user1"
       }
     ]
-    ssh_public_key = lookup(var.ssh_public_keys, "sftp_user1", null)
+    ssh_public_key = "sftp_user1"
     is_admin       = false
   },
   "sftp_user2" = {
@@ -81,7 +81,7 @@ sftp_users = {
         user_directory   = "/sftp-dev-acsp-aml/sftp_user2"
       }
     ]
-    ssh_public_key = lookup(var.ssh_public_keys, "sftp_user2", null)
+    ssh_public_key = "sftp_user2"
     is_admin       = false
   },
   "sftp_user3" = {
@@ -91,7 +91,7 @@ sftp_users = {
         user_directory   = "/sftp-dev-acsp-aml/sftp_user2"
       }
     ]
-    ssh_public_key = lookup(var.ssh_public_keys, "sftp_user3", null)
+    ssh_public_key = "sftp_user3"
     is_admin       = false
   },
   "sftp_admin" = {
@@ -101,7 +101,7 @@ sftp_users = {
         user_directory   = "/sftp-dev-acsp-aml"
       }
     ]
-    ssh_public_key = lookup(var.ssh_public_keys, "sftp_admin", null)
+    ssh_public_key = "sftp_admin"
     is_admin       = true
   }
 }
