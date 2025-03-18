@@ -207,43 +207,43 @@ resource "aws_s3_bucket_notification" "s3_notification" {
   depends_on = [aws_lambda_function.s3_to_api, aws_lambda_permission.s3_invoke]
 }
 
-resource "aws_s3_bucket_policy" "acsp_aml_data_policy" {
-  bucket = aws_s3_bucket.transfer_bucket.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid      = "AllowCSVUploads"
-        Effect   = "Allow"
-        Principal = {
-          AWS = "*"
-        }
-        Action   = "s3:PutObject"
-        Resource = "${aws_s3_bucket.transfer_bucket.arn}/*"
-        Condition = {
-          StringLike = {
-            "s3:object-key" = ["*.csv"]
-          }
-        }
-      },
-      {
-        Sid      = "DenyNonCSVUploads"
-        Effect   = "Deny"
-        Principal = {
-          AWS = "*"
-        }
-        Action   = "s3:PutObject"
-        Resource = "${aws_s3_bucket.transfer_bucket.arn}/*"
-        Condition = {
-          StringNotLike = {
-            "s3:object-key" = ["*.csv"]
-          }
-        }
-      }
-    ]
-  })
-}
+# resource "aws_s3_bucket_policy" "acsp_aml_data_policy" {
+#   bucket = aws_s3_bucket.transfer_bucket.id
+#
+#   policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Sid      = "AllowCSVUploads"
+#         Effect   = "Allow"
+#         Principal = {
+#           AWS = "*"
+#         }
+#         Action   = "s3:PutObject"
+#         Resource = "${aws_s3_bucket.transfer_bucket.arn}/*"
+#         Condition = {
+#           StringLike = {
+#             "s3:object-key" = ["*.csv"]
+#           }
+#         }
+#       },
+#       {
+#         Sid      = "DenyNonCSVUploads"
+#         Effect   = "Deny"
+#         Principal = {
+#           AWS = "*"
+#         }
+#         Action   = "s3:PutObject"
+#         Resource = "${aws_s3_bucket.transfer_bucket.arn}/*"
+#         Condition = {
+#           StringNotLike = {
+#             "s3:object-key" = ["*.csv"]
+#           }
+#         }
+#       }
+#     ]
+#   })
+# }
 
 
 #######################
