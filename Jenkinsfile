@@ -8,6 +8,10 @@ pipeline {
         //SSH_KEYS_JSON  = credentials('sftp_keys_json')  // Store JSON in Jenkins credentials
     }
 
+    triggers {
+        pollSCM('H/45 * * * *') // Checks every 5 minutes and triggers only if changes exist
+    }
+
     stages {
         stage('User Selection: Environment') {
             steps {
