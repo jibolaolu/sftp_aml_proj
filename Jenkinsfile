@@ -86,7 +86,7 @@ pipeline {
 
                         if (env.STATEFILE_EXISTS == "true") {
                             echo "Refreshing Terraform state..."
-                            sh "terraform refresh -var-file=${env.TFVARS_FILE}"
+                            sh """terraform refresh -var-file=${env.TFVARS_FILE} -var 'ssh_public_keys=${env.SSH_PUBLIC_KEYS_JSON}'"""
                         }
                     }
                 }
