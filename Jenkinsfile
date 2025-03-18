@@ -41,6 +41,20 @@ pipeline {
                             url: 'https://github.com/jibolaolu/sftp_aml_proj.git'
                         ]]
                     ])
+
+                    // Detect changes
+                    def changedFiles = sh(script: "git diff --name-only HEAD~1", returnStdout: true).trim().split('\n')
+
+                    // Check if any relevant files changed
+                    def relevantChanges = changedFiles.any { it.contains('terraform/') || it.contains('sftp-config/') }
+
+                    if (!relevantChanges) {
+                        echo "⚠️ No relevant changes detected. Skipping pipeline."
+                        currentBuild.result = 'ABORTED'
+                        return
+                    } else {
+                        echo "✅ Changes detected in the tracked directories. Proceeding with the pipeline..."
+                    }
                 }
             }
         }
