@@ -169,7 +169,7 @@ pipeline {
                         if (env.STATEFILE_EXISTS == "true") {
                             echo "Destroying Terraform..."
                             sh """
-                                terraform refresh -var-file=${env.TFVARS_FILE}
+                                terraform refresh -var-file=${env.TFVARS_FILE} -var 'ssh_public_keys=${env.SSH_PUBLIC_KEYS_JSON}'
                                 terraform destroy -auto-approve -var-file=${env.TFVARS_FILE} -var 'ssh_public_keys=${env.SSH_PUBLIC_KEYS_JSON}'
                             """
                         } else {
