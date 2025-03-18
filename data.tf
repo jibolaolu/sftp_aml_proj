@@ -10,7 +10,7 @@ data "aws_iam_policy_document" "transfer_user_policy" {
       "s3:GetBucketLocation"
     ]
     resources = [aws_s3_bucket.transfer_bucket.arn,
-      "${aws_s3_bucket.transfer_bucket.arn}/*"]
+    "${aws_s3_bucket.transfer_bucket.arn}/*"]
   }
 }
 
@@ -137,7 +137,7 @@ data "archive_file" "lambda_package" {
 
 data "aws_iam_policy_document" "lambda_assume_role_policy" {
   statement {
-    effect = "Allow"
+    effect  = "Allow"
     actions = ["sts:AssumeRole"]
     principals {
       type        = "Service"

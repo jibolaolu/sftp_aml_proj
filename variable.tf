@@ -46,7 +46,7 @@ variable "sftp_users" {
       source_directory = string
       user_directory   = string
     }))
-    ssh_public_key = string  # Ensure this attribute is defined
+    ssh_public_key = string # Ensure this attribute is defined
     is_admin       = bool
   }))
   default = {}

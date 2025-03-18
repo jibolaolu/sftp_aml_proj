@@ -53,11 +53,11 @@ vpc_id = "vpc-0033c72e0464565f5"
 
 nlb_internal = false
 
-domain_name     = "eaglesoncloude.com"
-subdomain       = "sftp"
+domain_name = "eaglesoncloude.com"
+subdomain   = "sftp"
 #nlb_dns_name    = "sftp-dev-transfer-nlb-97232fb12dc4a473.elb.eu-west-2.amazonaws.com"
 route53_zone_id = "Z093721723YGO5T9U48BI"
-region = "eu-west-2"
+region          = "eu-west-2"
 
 # user_directory_prefix = "sftp-dev-acsp-aml"
 # sftp_users = ["sftp_user1", "sftp_user2", "sftp_user3", "sftp_admin"]

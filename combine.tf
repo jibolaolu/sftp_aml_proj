@@ -15,9 +15,9 @@ resource "aws_security_group" "sftp_server_sg" {
 
   # Ingress rule to allow traffic only from the NLB
   ingress {
-    from_port       = 22
-    to_port         = 22
-    protocol        = "tcp"
+    from_port = 22
+    to_port   = 22
+    protocol  = "tcp"
     #security_groups = [aws_security_group.nlb_sg.id] # Reference NLB security group
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -201,8 +201,8 @@ resource "aws_s3_bucket_notification" "s3_notification" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.s3_to_api.arn
     events              = ["s3:ObjectCreated:*"]
-    filter_suffix       = ".csv"                  # Ensure CSV files trigger the Lambda
-    filter_prefix       = ""          # Ensure this matches the user's directory
+    filter_suffix       = ".csv" # Ensure CSV files trigger the Lambda
+    filter_prefix       = ""     # Ensure this matches the user's directory
   }
   depends_on = [aws_lambda_function.s3_to_api, aws_lambda_permission.s3_invoke]
 }
@@ -252,7 +252,7 @@ resource "aws_lambda_function" "s3_to_api" {
   function_name    = "${local.resource_prefix}-s3-to-api"
   runtime          = "python3.9" # Update based on your runtime
   role             = aws_iam_role.lambda_execution_role.arn
-  handler          = "s3_file.lambda_handler" # Update as per your entrypoint
+  handler          = "s3_file.lambda_handler"         # Update as per your entrypoint
   filename         = "${path.module}/lambda_code.zip" # Ensure this path is correct
   source_code_hash = filebase64sha256("${path.module}/lambda_code.zip")
   timeout          = 30
@@ -389,7 +389,7 @@ resource "aws_transfer_ssh_key" "transfer_user" {
   for_each  = var.sftp_users
   server_id = aws_transfer_server.transfer_server.id
   user_name = each.key
-  body      = lookup(var.ssh_public_keys, each.value.ssh_public_key, null)  # Perform the lookup here
+  body      = lookup(var.ssh_public_keys, each.value.ssh_public_key, null) # Perform the lookup here
 
   depends_on = [aws_transfer_user.transfer_user]
 }
